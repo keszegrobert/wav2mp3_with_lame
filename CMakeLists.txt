@@ -12,6 +12,28 @@ target_link_libraries(wav2mp3 libmp3lame.a)
 target_include_directories(wav2mp3 PRIVATE /usr/local/include)
 target_link_directories(wav2mp3 PRIVATE /usr/local/lib)
 
+add_test(
+    NAME test_no_param
+    COMMAND wav2mp3
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+set_tests_properties(
+    test_no_param PROPERTIES
+    PASS_REGULAR_EXPRESSION 
+    "This tool converts a folder of wav files to mp3"
+)
+
+add_test(
+    NAME test_with_param 
+    COMMAND wav2mp3 samples
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+set_tests_properties(
+    test_with_param PROPERTIES
+    PASS_REGULAR_EXPRESSION 
+    "Hello, lame"
+)
+
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
