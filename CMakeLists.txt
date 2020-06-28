@@ -34,6 +34,18 @@ set_tests_properties(
     "Hello, lame"
 )
 
+add_test(
+    NAME test_with_nonexisting_folder 
+    COMMAND wav2mp3 nonexisting
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+set_tests_properties(
+    test_with_nonexisting_folder PROPERTIES
+    PASS_REGULAR_EXPRESSION 
+    "Folder does not exist:"
+)
+
+
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
