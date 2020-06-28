@@ -7,7 +7,7 @@ enable_testing()
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(wav2mp3 main.cpp)
+add_executable(wav2mp3 main.cpp wavfile.cpp)
 target_link_libraries(wav2mp3 libmp3lame.a)
 target_include_directories(wav2mp3 PRIVATE /usr/local/include)
 target_link_directories(wav2mp3 PRIVATE /usr/local/lib)

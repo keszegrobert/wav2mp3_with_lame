@@ -1,4 +1,6 @@
+#include "wavfile.h"
 #include <dirent.h>
+#include <fstream>
 #include <iostream>
 #include <lame/lame.h>
 #include <sstream>
@@ -9,9 +11,7 @@ const std::vector<std::string> get_wav_files(std::string folder)
 {
     DIR* dir = opendir(folder.c_str());
     if (dir == nullptr) {
-        std::stringstream ss;
-        ss << "Folder does not exist:" << folder << std::endl;
-        throw std::runtime_error(ss.str());
+        throw std::runtime_error("Folder does not exist: " + folder);
     }
     std::vector<std::string> wavs;
     while (true) {
@@ -22,7 +22,7 @@ const std::vector<std::string> get_wav_files(std::string folder)
         if (filename.rfind(".wav") == std::string::npos) {
             continue;
         }
-        wavs.push_back(filename);
+        wavs.push_back(folder + "/" + filename);
     }
     return wavs;
 }
@@ -34,15 +34,26 @@ int main(int argc, char* argv[])
         std::cout << "  Usage: wav2mp3 folder" << std::endl;
         return EXIT_FAILURE;
     }
+
+    std::cout << "Hello, lame " << get_lame_version() << std::endl;
+
+    lame_t lame = lame_init();
+
+    std::vector<std::string> paths;
+
     try {
-        std::vector<std::string> paths = get_wav_files(argv[1]);
+        paths = get_wav_files(argv[1]);
+        for (std::string fname : paths) {
+            std::cout << fname << std::endl;
+            WavFile wave;
+            wave.parse(fname);
+        }
+
     } catch (const std::exception& e) {
-        std::cout << e.what();
+        std::cout << "RUNTIME ERROR: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
 
-    lame_t lame = lame_init();
-    std::cout << "Hello, lame " << get_lame_version() << std::endl;
     lame_close(lame);
     return EXIT_SUCCESS;
 }
