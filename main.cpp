@@ -47,7 +47,6 @@ int main(int argc, char* argv[])
             std::string new_name = fname;
             new_name.replace(new_name.end() - 4, new_name.end(), ".mp3");
             mp3.write(new_name, model);
-            break;
         }
     } catch (const std::exception& e) {
         std::cout << "RUNTIME ERROR: " << e.what() << std::endl;

@@ -74,18 +74,35 @@ void WavReader::parseData(std::ifstream& infile, uint32_t size, PcmModel& pcm)
 {
     int16_t num_bytes_per_block = pcm.channels * (pcm.bits_per_sample / 8);
     int samples = size / (pcm.channels * num_bytes_per_block);
-    pcm.channel_data.clear();
-    pcm.channel_data.resize(pcm.channels);
     for (int channel = 0; channel < pcm.channels; ++channel) {
         pcm.channel_data[channel].resize(samples);
     }
     std::cout << "samples: " << samples << std::endl;
     std::cout << "channels: " << pcm.channels << std::endl;
+    double dmax = double(1 << (pcm.bits_per_sample));
     for (int sample = 0; sample < samples; ++sample) {
         for (int channel = 0; channel < pcm.channels; ++channel) {
-            int32_t data = 0;
-            infile.read(reinterpret_cast<char*>(&data), pcm.bits_per_sample / 8);
-            pcm.channel_data[channel][sample] = data;
+            if (pcm.bits_per_sample == 8) {
+                int32_t data = 0;
+                infile.read(reinterpret_cast<char*>(&data), 1);
+                pcm.channel_data[channel][sample] = (double)data / dmax;
+            } else if (pcm.bits_per_sample == 16) {
+                int16_t data;
+                infile.read(reinterpret_cast<char*>(&data), 2);
+                pcm.channel_data[channel][sample] = (double)data / dmax;
+            } else if (pcm.bits_per_sample == 24) {
+                uint8_t data0 = 0;
+                infile.read(reinterpret_cast<char*>(&data0), 1);
+                uint8_t data1 = 0;
+                infile.read(reinterpret_cast<char*>(&data1), 1);
+                uint8_t data2 = 0;
+                infile.read(reinterpret_cast<char*>(&data2), 1);
+                int32_t data = (data2 << 16) | (data1 << 8) | data0;
+                if (data & 0x800000)
+                    data = data | ~0xFFFFFF;
+
+                pcm.channel_data[channel][sample] = (double)data / dmax;
+            }
         }
     }
 

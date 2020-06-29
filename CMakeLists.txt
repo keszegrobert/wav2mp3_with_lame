@@ -4,7 +4,7 @@ project(wav2mp3 VERSION 0.1.0)
 include(CTest)
 enable_testing()
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(wav2mp3 main.cpp wavreader.cpp mp3writer.cpp)

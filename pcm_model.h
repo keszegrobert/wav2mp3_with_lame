@@ -7,5 +7,5 @@ struct PcmModel {
     uint32_t bytes_per_sec;
     uint16_t block_align;
     uint16_t bits_per_sample;
-    std::vector<std::vector<int32_t>> channel_data;
+    std::vector<double> channel_data[2];
 };
