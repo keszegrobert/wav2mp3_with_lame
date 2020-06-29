@@ -4,6 +4,7 @@
 void WavReader::parseHeader(std::ifstream& infile, std::string& name, uint32_t& size)
 {
     char chunk_name[4];
+    std::cout << "chunk on position: " << infile.tellg() << std::endl;
     infile.read(chunk_name, 4);
     if (infile.tellg() < 0)
         return;
@@ -73,13 +74,13 @@ void WavReader::ignoreUnknown(std::ifstream& infile, uint32_t size)
 void WavReader::parseData(std::ifstream& infile, uint32_t size, PcmModel& pcm)
 {
     int16_t num_bytes_per_block = pcm.channels * (pcm.bits_per_sample / 8);
-    int samples = size / (pcm.channels * num_bytes_per_block);
+    int samples = size / num_bytes_per_block;
     for (int channel = 0; channel < pcm.channels; ++channel) {
         pcm.channel_data[channel].resize(samples);
     }
     std::cout << "samples: " << samples << std::endl;
     std::cout << "channels: " << pcm.channels << std::endl;
-    double dmax = double(1 << (pcm.bits_per_sample));
+    double dmax = double(1 << pcm.bits_per_sample);
     for (int sample = 0; sample < samples; ++sample) {
         for (int channel = 0; channel < pcm.channels; ++channel) {
             if (!infile.good())
