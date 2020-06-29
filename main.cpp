@@ -1,8 +1,8 @@
-#include "wavfile.h"
+#include "mp3writer.h"
+#include "wavreader.h"
 #include <dirent.h>
 #include <fstream>
 #include <iostream>
-#include <lame/lame.h>
 #include <sstream>
 #include <stdexcept>
 #include <vector>
@@ -35,25 +35,20 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    std::cout << "Hello, lame " << get_lame_version() << std::endl;
-
-    lame_t lame = lame_init();
-
-    std::vector<std::string> paths;
-
     try {
+        std::vector<std::string> paths;
         paths = get_wav_files(argv[1]);
         for (std::string fname : paths) {
             std::cout << fname << std::endl;
-            WavFile wave;
-            wave.parse(fname);
+            WavReader wav;
+            Mp3Writer mp3;
+            wav.load(fname);
+            mp3.write(fname, wav);
         }
-
     } catch (const std::exception& e) {
         std::cout << "RUNTIME ERROR: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
 
-    lame_close(lame);
     return EXIT_SUCCESS;
 }
