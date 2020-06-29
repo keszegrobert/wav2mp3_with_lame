@@ -42,8 +42,12 @@ int main(int argc, char* argv[])
             std::cout << fname << std::endl;
             WavReader wav;
             Mp3Writer mp3;
-            wav.load(fname);
-            mp3.write(fname, wav);
+            PcmModel model;
+            wav.load(fname, model);
+            std::string new_name = fname;
+            new_name.replace(new_name.end() - 4, new_name.end(), ".mp3");
+            mp3.write(new_name, model);
+            break;
         }
     } catch (const std::exception& e) {
         std::cout << "RUNTIME ERROR: " << e.what() << std::endl;

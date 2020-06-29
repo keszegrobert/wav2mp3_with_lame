@@ -10,5 +10,5 @@ private:
     int16_t pcm_buffer[PCM_SIZE * 2];
 
 public:
-    void write(std::string fname, WavReader& wav);
+    void write(std::string fname, PcmModel& pcm);
 };
