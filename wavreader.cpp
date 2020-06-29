@@ -82,6 +82,8 @@ void WavReader::parseData(std::ifstream& infile, uint32_t size, PcmModel& pcm)
     double dmax = double(1 << (pcm.bits_per_sample));
     for (int sample = 0; sample < samples; ++sample) {
         for (int channel = 0; channel < pcm.channels; ++channel) {
+            if (!infile.good())
+                break;
             if (pcm.bits_per_sample == 8) {
                 int32_t data = 0;
                 infile.read(reinterpret_cast<char*>(&data), 1);
