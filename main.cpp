@@ -35,22 +35,27 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
+    std::vector<std::string> paths;
     try {
-        std::vector<std::string> paths;
         paths = get_wav_files(argv[1]);
-        for (std::string fname : paths) {
-            std::cout << fname << std::endl;
-            WavReader wav;
-            Mp3Writer mp3;
-            PcmModel model;
+    } catch (const std::exception& e) {
+        std::cout << "RUNTIME ERROR: " << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    for (std::string fname : paths) {
+        std::cout << fname << std::endl;
+        WavReader wav;
+        Mp3Writer mp3;
+        PcmModel model;
+        try {
             wav.load(fname, model);
             std::string new_name = fname;
             new_name.replace(new_name.end() - 4, new_name.end(), ".mp3");
             mp3.write(new_name, model);
+        } catch (const std::exception& e) {
+            std::cout << "RUNTIME ERROR: " << e.what() << std::endl;
         }
-    } catch (const std::exception& e) {
-        std::cout << "RUNTIME ERROR: " << e.what() << std::endl;
-        return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;
