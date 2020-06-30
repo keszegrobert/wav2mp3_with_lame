@@ -19,7 +19,7 @@ This is a command line tool, so a Terminal will be needed to see how it works
 ```
 wav2mp3 <folder>
 ```
-where <folder> can be any folder in the  file system
+where `<folder>` can be any folder in the  file system
 
 # Abilities
 
